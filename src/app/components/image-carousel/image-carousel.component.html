@@ -1,0 +1,79 @@
+<section
+  class="carousel"
+  role="region"
+  tabindex="0"
+  [attr.aria-label]="ariaLabel() || 'Photo carousel'"
+>
+  <div class="viewport">
+    <button
+      mat-icon-button
+      type="button"
+      class="nav left"
+      (click)="prev()"
+      aria-label="Previous slide"
+    >
+      <mat-icon aria-hidden="true">chevron_left</mat-icon>
+    </button>
+
+    <div
+      #track
+      class="track"
+      [class.no-transition]="!isTransitionEnabled()"
+      role="listbox"
+      [attr.aria-activedescendant]="activeDescendantId() ?? undefined"
+      [style.transform]="trackTransform()"
+      (pointerdown)="onPointerDown($event)"
+      (pointerup)="onPointerUp($event)"
+      (pointercancel)="onPointerCancel()"
+      (pointerleave)="onPointerCancel()"
+    >
+      @for (slide of slides(); track slide.id; let i = $index) {
+        <article
+          class="slide"
+          role="option"
+          [id]="slide.id"
+          [attr.aria-selected]="isCurrentItem(slide.itemIndex)"
+          [class.current]="isCurrentItem(slide.itemIndex)"
+          [class.selected]="isSelected(slide.itemIndex)"
+          [attr.data-highlight]="isSelected(slide.itemIndex) ? selectionPulse() : null"
+        >
+          <div class="slide-inner">
+            <img
+              [ngSrc]="slide.image.src"
+              [alt]="slide.image.alt || 'Photo ' + (slide.itemIndex + 1)"
+              [width]="slide.image.width || 1"
+              [height]="slide.image.height || 1"
+              [priority]="slide.itemIndex === 0"
+              (load)="onImageLoad(slide.itemIndex)"
+            />
+          </div>
+          @if (slide.image.caption) {
+            <footer class="caption">{{ slide.image.caption }}</footer>
+          }
+        </article>
+      }
+    </div>
+
+    <button
+      mat-icon-button
+      type="button"
+      class="nav right"
+      (click)="next()"
+      aria-label="Next slide"
+    >
+      <mat-icon aria-hidden="true">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="selector-row">
+    <uplevel class="selector-row__uplevel"></uplevel>
+    <carousel-selector
+      [images]="images()"
+      [visibleIndexes]="visibleThumbnailIndexes()"
+      [currentIndex]="currentItemIndex() ?? -1"
+      [selectedIndex]="selectedIndex()"
+      [selectionPulse]="selectionPulse()"
+      (navigateTo)="goToItem($event)"
+    ></carousel-selector>
+  </div>
+</section>

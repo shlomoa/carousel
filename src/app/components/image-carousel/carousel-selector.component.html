@@ -1,0 +1,47 @@
+<section class="selector" aria-label="Select image">
+  <button
+    type="button"
+    class="selector__button"
+    mat-icon-button
+    aria-label="Previous image"
+    (click)="goPrevious()"
+  >
+    <mat-icon aria-hidden="true">chevron_left</mat-icon>
+  </button>
+
+  <ul class="selector__thumbnails" role="list">
+    @for (thumbIndex of visibleIndexes(); track thumbIndex) {
+      <li>
+        <button
+          type="button"
+          class="selector__thumb"
+          [class.selector__thumb--current]="isCurrent(thumbIndex)"
+          [class.selector__thumb--selected]="isSelected(thumbIndex)"
+          [attr.aria-label]="imageLabel(thumbIndex)"
+          [attr.data-highlight]="isSelected(thumbIndex) ? selectionPulse() : null"
+          (click)="onNavigate(thumbIndex)"
+        >
+          <img
+            [ngSrc]="thumbnailSrc(thumbIndex)"
+            [alt]="imageLabel(thumbIndex)"
+            width="72"
+            height="48"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="selector__thumb-outline"></span>
+        </button>
+      </li>
+    }
+  </ul>
+
+  <button
+    type="button"
+    class="selector__button"
+    mat-icon-button
+    aria-label="Next image"
+    (click)="goNext()"
+  >
+    <mat-icon aria-hidden="true">chevron_right</mat-icon>
+  </button>
+</section>

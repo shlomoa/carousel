@@ -1,0 +1,125 @@
+$selector-gap: 1rem;
+$selector-gap-compact: 0.5rem;
+$thumb-width: 72px;
+$thumb-height: 48px;
+$thumb-width-compact: 60px;
+$thumb-height-compact: 40px;
+$bp-phone: 600px;
+$bp-compact: 480px;
+
+.selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $selector-gap;
+  padding: 0.75rem 0;
+}
+
+.selector__button {
+  color: inherit;
+}
+
+.selector__thumbnails {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.selector__thumb {
+  position: relative;
+  display: flex;
+  width: $thumb-width;
+  height: $thumb-height;
+  border: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.selector__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.selector__thumb-outline {
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.selector__thumb--current .selector__thumb-outline {
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.selector__thumb--selected .selector__thumb-outline {
+  border-color: var(--accent-color, #c2185b);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.selector__thumb:focus-visible .selector__thumb-outline {
+  border-color: var(--accent-color, #c2185b);
+  box-shadow: 0 0 0 2px rgba(194, 24, 91, 0.35);
+}
+
+.selector__thumb:hover {
+  transform: scale(1.02);
+}
+
+.selector__thumb--selected[data-highlight] {
+  animation: selectionPulse 420ms ease;
+}
+
+@keyframes selectionPulse {
+  0% {
+    transform: scale(0.98);
+    box-shadow: 0 0 0 0 rgba(194, 24, 91, 0.35);
+  }
+  60% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px rgba(194, 24, 91, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(194, 24, 91, 0);
+  }
+}
+
+@media (max-width: $bp-phone) {
+  .selector {
+    gap: 0.75rem;
+  }
+
+  .selector__thumbnails {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: $bp-compact) {
+  .selector {
+    gap: $selector-gap-compact;
+  }
+
+  .selector__thumbnails {
+    gap: $selector-gap-compact;
+  }
+
+  .selector__thumb {
+    width: $thumb-width-compact;
+    height: $thumb-height-compact;
+  }
+
+  .selector__button mat-icon {
+    font-size: 28px;
+  }
+}

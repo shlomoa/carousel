@@ -1,0 +1,12 @@
+<main class="container">
+  <image-carousel
+    [images]="images()"
+    ariaLabel="Sample trip photos"
+    (selectionChange)="onSelectionChange($event)"
+  ></image-carousel>
+
+  <selection-details
+    [image]="selectedImage()"
+    [index]="selectedIndex()"
+  ></selection-details>
+</main>
