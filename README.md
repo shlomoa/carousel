@@ -2,6 +2,8 @@
 
 An Angular 20+ demo that showcases an infinite photo carousel with keyboard, pointer, and thumbnail navigation. The implementation emphasises signal-based state management, accessibility, and component reusability. Architectural details live in [`docs/CAROUSEL_SPEC.md`](./docs/CAROUSEL_SPEC.md).
 
+See a simple caroucel proof of concept in [this stackblitz project](https://stackblitz.com/edit/stackblitz-starters-wqy2bpwo?file=src%2Fmain.ts).
+
 ![Screenshot showing the carousel UI](docs/screenshot.png)
 
 ## What to Expect
