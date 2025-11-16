@@ -9,16 +9,15 @@ See a simple caroucel proof of concept in [this stackblitz project](https://stac
 ## What to Expect
 
 - Seamless looping carousel powered by array rotation (no DOM cloning).
-- Keyboard-friendly navigation (`←`, `→`, `Enter`, `Space`).
-- Pointer gestures with swipe detection, long-press selection, and thumbnail previews.
-- Selection metadata panel announcing updates via `aria-live`.
-- A stylised "uplevel" control ready to hook into broader navigation flows.
+- Native touch mouse and keyboard support.
+- Smaller preview carousel view.
+- Informative selection metadata panel announcing.
 - Responsive layout tuned for desktop, tablets, and phones—portrait or landscape—with automatic height clamping so the hero image always stays in frame.
 
 ## Prerequisites
 
-- Node.js 20 or later.
-- npm 10 or later (bundled with Node 20).
+- [Angular Material 20.2.12](https://material.angular.io/).
+- npm 11 and node v24.
 
 Install dependencies once:
 
