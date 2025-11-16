@@ -113,6 +113,8 @@ The implementation uses an **array rotation** technique to emulate an endless tr
 - Navigation buttons float over the viewport with blurred glass backgrounds and hover/focus states.
 - The selector row centers its content, spacing the uplevel control from the thumbnail list.
 - Selection pulses use keyframed scale and box-shadow transitions for emphasis.
+- In short landscape scenarios (e.g., handsets rotated horizontally) the viewport height is clamped and slide images switch to `object-fit: contain`, keeping the full frame visible without cropping.
+- Thumbnail buttons and the uplevel control scale down at shared breakpoint tiers (600 px, 480 px) so the selector row remains a single aligned line across phones and tablets.
 
 ## 8. Integration Notes
 

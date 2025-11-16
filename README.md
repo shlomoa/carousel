@@ -11,6 +11,7 @@ An Angular 20+ demo that showcases an infinite photo carousel with keyboard, poi
 - Pointer gestures with swipe detection, long-press selection, and thumbnail previews.
 - Selection metadata panel announcing updates via `aria-live`.
 - A stylised "uplevel" control ready to hook into broader navigation flows.
+- Responsive layout tuned for desktop, tablets, and phones—portrait or landscape—with automatic height clamping so the hero image always stays in frame.
 
 ## Prerequisites
 
