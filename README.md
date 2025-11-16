@@ -81,3 +81,7 @@ Watch mode is available with `npm test -- --watch=true`.
 - **Decorative CTA:** Drop into marketing layouts where a compact, on-brand upward arrow control is desired.
 
 For deeper architectural notes—including signal wiring, animation timing, and accessibility considerations—see [`docs/CAROUSEL_SPEC.md`](./docs/CAROUSEL_SPEC.md).
+
+## License
+
+This project is licensed under the MIT License. See the [`LICENSE`](./LICENSE) file for details.
