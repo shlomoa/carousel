@@ -2,6 +2,17 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './components/app.component';
 
 describe('AppComponent', () => {
+  beforeAll(() => {
+    const href = 'https://picsum.photos';
+    if (!document.head.querySelector(`link[rel="preconnect"][href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = href;
+      link.crossOrigin = '';
+      document.head.append(link);
+    }
+  });
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],

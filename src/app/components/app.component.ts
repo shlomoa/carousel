@@ -2,8 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ImageCarouselComponent, CarouselImage, CarouselSelection } from './image-carousel/image-carousel.component';
-import { SelectionDetailsComponent } from './selection-details/selection-details.component';
+import {
+  ImageCarouselComponent,
+  SelectionDetailsComponent,
+  CarouselImage,
+  CarouselSelection,
+} from '@shlomoa/mat-image-carousel';
 
 @Component({
   selector: 'app-root',

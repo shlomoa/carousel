@@ -6,6 +6,12 @@
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
+    "paths": {
+      "@shlomoa/mat-image-carousel": [
+        "./projects/mat-image-carousel/src/public-api",
+        "./dist/mat-image-carousel"
+      ]
+    },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
@@ -29,6 +35,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/mat-image-carousel/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/mat-image-carousel/tsconfig.spec.json"
     }
   ]
 }

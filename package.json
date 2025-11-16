@@ -7,7 +7,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:lib": "ng build mat-image-carousel",
+    "pack:lib": "npm run build:lib && cd dist/mat-image-carousel && npm pack",
+    "publish:lib": "npm run build:lib && cd dist/mat-image-carousel && npm publish"
   },
   "prettier": {
     "printWidth": 100,
@@ -47,6 +50,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^20.3.0",
     "typescript": "~5.9.2"
   }
 }

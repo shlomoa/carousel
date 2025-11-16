@@ -1,6 +1,6 @@
 # Photo Carousel Implementation Specification
 
-This document describes the current Angular implementation of the photo carousel demo located in `src/app/components`. It covers component responsibilities, state management, navigation mechanics, user interactions, accessibility, and visual behaviour.
+This document describes the Angular implementation provided by the `@shlomoa/mat-image-carousel` library (`projects/mat-image-carousel/src/lib`). It covers component responsibilities, state management, navigation mechanics, user interactions, accessibility, and visual behaviour. The demo application under `src/app/components` consumes the same exported components.
 
 ## 1. Component Overview
 
@@ -40,6 +40,7 @@ This document describes the current Angular implementation of the photo carousel
 - **Output:** `activated` emits on click; the current shell does not handle this event yet, so the control is visually present but functionally inert.
 
 ### 1.5 `AppComponent` (`app-root`)
+- Imports `ImageCarouselComponent` and `SelectionDetailsComponent` directly from the `@shlomoa/mat-image-carousel` package.
 - Holds the image data array and current selection as Angular signals.
 - Passes `images` into `<image-carousel>` and listens for `selectionChange` to update local state.
 - Passes the resulting `selectedImage` and `selectedIndex` into `<selection-details>`.
@@ -121,6 +122,7 @@ The implementation uses an **array rotation** technique to emulate an endless tr
 - The demo seeds five sample images from Picsum with captions, alt text, and dimensions.
 - No global state store is required; all component state is local via signals.
 - The `uplevel` component currently emits an `activated` event with no listener—future features may hook into it for navigation.
-- Unit tests (`npm test`) validate component creation, carousel rendering, and uplevel presence.
+- The carousel ships as the `@shlomoa/mat-image-carousel` Angular library and is built with `ng build mat-image-carousel`; `npm run pack:lib` produces a distributable tarball.
+- Unit tests (`npm test`) validate component creation, carousel rendering, and uplevel presence across both the library and demo shell.
 
 This specification reflects the behaviour of the codebase as of November 2025.

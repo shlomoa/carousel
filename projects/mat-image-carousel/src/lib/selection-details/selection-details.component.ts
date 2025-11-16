@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselImage } from '../image-carousel/image-carousel.component';
+import { CarouselImage } from '../types';
 
 @Component({
   selector: 'selection-details',

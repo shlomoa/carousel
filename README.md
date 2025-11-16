@@ -81,6 +81,27 @@ Watch mode is available with `npm test -- --watch=true`.
 
 For deeper architectural notes—including signal wiring, animation timing, and accessibility considerations—see [`docs/CAROUSEL_SPEC.md`](./docs/CAROUSEL_SPEC.md).
 
+## Library Distribution
+
+The carousel components now ship as a standalone library under `projects/mat-image-carousel`.
+
+- Install from npm:
+	```
+	npm install @shlomoa/mat-image-carousel
+	```
+- Import the standalone components directly into your Angular feature modules or components:
+	```ts
+	import { ImageCarouselComponent, SelectionDetailsComponent } from '@shlomoa/mat-image-carousel';
+	```
+- Build / pack / publish from the workspace root:
+	- `npm run build:lib` – run `ng build mat-image-carousel`
+	- `npm run pack:lib` – build and produce a `.tgz` via `npm pack`
+	- `npm run publish:lib` – build and publish to npm (requires login)
+
+`npm run pack:lib` emits `dist/mat-image-carousel/shlomoa-mat-image-carousel-<version>.tgz`, which you can install with `npm install ./shlomoa-mat-image-carousel-<version>.tgz` in another project.
+
+See [`projects/mat-image-carousel/README.md`](./projects/mat-image-carousel/README.md) for full usage details and API docs.
+
 ## License
 
 This project is licensed under the MIT License. See the [`LICENSE`](./LICENSE) file for details.

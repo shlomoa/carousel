@@ -1,10 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CarouselSelectorComponent } from './carousel-selector.component';
-import { CarouselImage } from './image-carousel.component';
+import { CarouselImage } from '../types';
 
 describe('CarouselSelectorComponent', () => {
   let fixture: ComponentFixture<CarouselSelectorComponent>;
+
+  beforeAll(() => {
+    const href = 'https://example.com';
+    if (!document.head.querySelector(`link[rel="preconnect"][href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = href;
+      link.crossOrigin = '';
+      document.head.append(link);
+    }
+  });
 
   const baseImages: CarouselImage[] = [
     { src: 'https://example.com/a.jpg', alt: 'A' },

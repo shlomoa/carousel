@@ -93,6 +93,36 @@
           }
         }
       }
+    },
+    "mat-image-carousel": {
+      "projectType": "library",
+      "root": "projects/mat-image-carousel",
+      "sourceRoot": "projects/mat-image-carousel/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/mat-image-carousel/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/mat-image-carousel/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/mat-image-carousel/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
     }
   }
 }

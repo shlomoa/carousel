@@ -1,9 +1,21 @@
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
-import { ImageCarouselComponent, CarouselImage, CarouselSelection } from './image-carousel.component';
+import { ImageCarouselComponent } from './image-carousel.component';
+import { CarouselImage, CarouselSelection } from '../types';
 
 describe('ImageCarouselComponent', () => {
   let fixture: ComponentFixture<ImageCarouselComponent>;
   let component: ImageCarouselComponent;
+
+  beforeAll(() => {
+    const href = 'https://example.com';
+    if (!document.head.querySelector(`link[rel="preconnect"][href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = href;
+      link.crossOrigin = '';
+      document.head.append(link);
+    }
+  });
 
   const createImages = (count: number): CarouselImage[] =>
     Array.from({ length: count }, (_, i) => ({

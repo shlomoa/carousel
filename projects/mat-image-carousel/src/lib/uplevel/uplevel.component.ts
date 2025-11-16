@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 

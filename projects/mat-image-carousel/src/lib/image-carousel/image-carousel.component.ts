@@ -15,27 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CarouselSelectorComponent } from './carousel-selector.component';
 import { UplevelComponent } from '../uplevel/uplevel.component';
-
-export interface CarouselImage {
-  src: string;
-  alt?: string;
-  width?: number;
-  height?: number;
-  caption?: string;
-  thumbnailSrc?: string;
-  description?: string;
-}
-
-export interface CarouselSelection {
-  index: number;
-  image: CarouselImage;
-}
-
-export interface CarouselSlide {
-  readonly id: string;
-  readonly image: CarouselImage;
-  readonly itemIndex: number;
-}
+import { CarouselImage, CarouselSelection, CarouselSlide } from '../types';
 
 @Component({
   selector: 'image-carousel',
