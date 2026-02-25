@@ -32,7 +32,7 @@ jobs:
           TAG: ${{ needs.tag_release.outputs.VERSION }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$TAG" \
+          echo gh release create "$TAG" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${GITHUB_REPOSITORY#*/} $TAG" \
             --generate-notes # Automatically generate release notes
