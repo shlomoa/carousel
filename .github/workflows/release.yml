@@ -18,6 +18,9 @@ jobs:
       - id: checkout
         name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - id: set_version
         name: Set tag version and apply tag
         run: |
@@ -30,6 +33,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - name: Create release
         env:          
           TAG: ${{ needs.tag_release.outputs.GITTAGVER }}
