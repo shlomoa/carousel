@@ -41,9 +41,8 @@ jobs:
           TAG: ${{ needs.tag_release.outputs.GITTAGVER }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo 'outputs: ${{ needs.tag_release.outputs }}'
-          git tag -l
-          echo gh release create "$TAG" \
+          echo "releasing version $TAG $TAG"
+          gh release create "$TAG" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${GITHUB_REPOSITORY#*/} $TAG" \
             --generate-notes
