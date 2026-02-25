@@ -10,13 +10,6 @@ permissions:
   contents: write # Grant write permissions to the GITHUB_TOKEN
 
 jobs:
-  testtag:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run tests
-        run: ./scripts/tag_latest_commit.sh
   tag_release:
     runs-on: ubuntu-latest
     outputs:
@@ -26,7 +19,7 @@ jobs:
         name: Checkout code
         uses: actions/checkout@v4
       - id: set_version
-        name: Set variable
+        name: Set tag version and apply tag
         run: echo "VERSION=$(./scripts/tag_latest_commit.sh)" >> $GITHUB_ENV
   release:
     runs-on: ubuntu-latest
@@ -39,4 +32,7 @@ jobs:
           TAG: ${{ needs.tag_release.outputs.VERSION }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "$TAG"
+          gh release create "$TAG" \
+            --repo="$GITHUB_REPOSITORY" \
+            --title="${GITHUB_REPOSITORY#*/} $TAG" \
+            --generate-notes # Automatically generate release notes

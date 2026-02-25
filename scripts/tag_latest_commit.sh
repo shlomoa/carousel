@@ -2,6 +2,6 @@
 
 new_tag=$(/usr/bin/git tag --merged HEAD |  /usr/bin/tail -1 | /usr/bin/perl -pe 's/(.*)(\d+)/$1.($2+1)/e')
 
-#git tag -a $new_tag -m "a new version: $new_tag"
+/usr/bin/git tag -a $new_tag -m "a new version: $new_tag"
 
 echo $new_tag
