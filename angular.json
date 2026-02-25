@@ -91,6 +91,15 @@
               "src/styles.scss"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -120,6 +129,16 @@
               "zone.js",
               "zone.js/testing"
             ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/mat-image-carousel/src/**/*.ts",
+              "projects/mat-image-carousel/src/**/*.html"
+            ],
+            "eslintConfig": "projects/mat-image-carousel/eslint.config.js"
           }
         }
       }
