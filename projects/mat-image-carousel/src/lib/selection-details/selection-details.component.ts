@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { CarouselImage } from '../types';
 
 @Component({
   selector: 'selection-details',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './selection-details.component.html',
   styleUrls: ['./selection-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
