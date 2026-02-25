@@ -7,7 +7,7 @@ on:
       - completed
 
 permissions:
-  contents: write # Grant write permissions to the GITHUB_TOKEN
+  contents: write
 
 jobs:
   tag_release:
