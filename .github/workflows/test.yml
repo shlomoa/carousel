@@ -1,0 +1,23 @@
+name: Create release
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
+permissions:
+  contents: write # Grant write permissions to the GITHUB_TOKEN
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create release
+        env:
+          TAG: $(./scripts/tag_latest_commit.sh)
+          GH_TOKEN: ${{ github.token }}
+        run: echo $TAG

@@ -16,13 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get a new tag based on latest tag
-        id: version
-        run: echo "version=$(git tag --merged HEAD |  tail -1 | perl -pe 's/(.*)(\d+)/$1.($2+1)/e')" >> $GITHUB_OUTPUT
-
       - name: Create release
         env:
-          TAG: ${{ steps.version.outputs.version }}
+          TAG: $(./scripts/tag_latest_commit.sh)
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$TAG" \
