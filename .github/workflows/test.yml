@@ -15,9 +15,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      - name: Set variable
+        id: set_version
+        run: echo "VERSION=$(./scripts/tag_latest_commit.sh)" >> $GITHUB_ENV
       - name: Create release
         env:
-          TAG: $(./scripts/tag_latest_commit.sh)
+          TAG: ${{ steps.set_version.outputs.VERSION }}
           GH_TOKEN: ${{ github.token }}
-        run: echo $TAG
+        run: echo "$TAG"
