@@ -38,4 +38,5 @@ jobs:
         env:          
           TAG: ${{ needs.tag_release.outputs.VERSION }}
           GH_TOKEN: ${{ github.token }}
-        run: echo "$TAG"
+        run: |
+          echo "$TAG"
