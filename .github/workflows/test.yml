@@ -10,6 +10,13 @@ permissions:
   contents: write # Grant write permissions to the GITHUB_TOKEN
 
 jobs:
+  testtag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: ./scripts/tag_latest_commit.sh
   tag_release:
     runs-on: ubuntu-latest
     outputs:
