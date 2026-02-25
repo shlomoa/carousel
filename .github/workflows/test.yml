@@ -10,16 +10,25 @@ permissions:
   contents: write # Grant write permissions to the GITHUB_TOKEN
 
 jobs:
+  tag_release:
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.set_version.outputs.VERSION }}
+    steps:
+      - id: checkout
+        name: Checkout code
+        uses: actions/checkout@v4
+      - id: set_version
+        name: Set variable
+        run: echo "VERSION=$(./scripts/tag_latest_commit.sh)" >> $GITHUB_ENV
   release:
     runs-on: ubuntu-latest
+    needs: tag_release
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set variable
-        id: set_version
-        run: echo "VERSION=$(./scripts/tag_latest_commit.sh)" >> $GITHUB_ENV
       - name: Create release
-        env:
-          TAG: ${{ steps.set_version.outputs.VERSION }}
+        env:          
+          TAG: ${{ needs.tag_release.outputs.VERSION }}
           GH_TOKEN: ${{ github.token }}
         run: echo "$TAG"
