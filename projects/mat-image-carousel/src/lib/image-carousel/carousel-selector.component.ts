@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CarouselImage } from '../types';
 
 @Component({
   selector: 'carousel-selector',
-  imports: [CommonModule, MatButtonModule, MatIconModule, NgOptimizedImage],
+  imports: [MatButtonModule, MatIconModule, NgOptimizedImage],
   templateUrl: './carousel-selector.component.html',
   styleUrls: ['./carousel-selector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

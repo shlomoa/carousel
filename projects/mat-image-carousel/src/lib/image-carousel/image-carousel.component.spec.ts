@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ImageCarouselComponent } from './image-carousel.component';
 import { CarouselImage, CarouselSelection } from '../types';
 
@@ -221,5 +222,128 @@ describe('ImageCarouselComponent', () => {
     expect(component.slides().map((slide) => slide.itemIndex)).toEqual([3, 0, 1, 2]);
     expect(component.currentIndex()).toBe(1);
     expect(component.currentItemIndex()).toBe(0);
+  });
+
+  describe('User Interactions', () => {
+    beforeEach(() => {
+      // Ensure time-based logic uses the fakeAsync clock
+      spyOn<any>(component, 'now').and.callFake(() => Date.now());
+    });
+
+    const triggerPointer = (
+      element: HTMLElement,
+      type: 'pointerdown' | 'pointerup' | 'pointercancel',
+      init: PointerEventInit = {}
+    ) => {
+      const event = new PointerEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        isPrimary: true,
+        pointerId: 1,
+        pointerType: 'mouse',
+        ...init,
+      });
+      element.dispatchEvent(event);
+      return event;
+    };
+
+    it('navigates next on left swipe', fakeAsync(() => {
+      configure(createImages(3));
+      const track = fixture.debugElement.query(By.css('.track')).nativeElement;
+
+      triggerPointer(track, 'pointerdown', { clientX: 200 });
+      tick(50); // Simulate hold time
+      triggerPointer(track, 'pointerup', { clientX: 100 }); // Moved left by 100px
+
+      flush();
+      expect(component.currentItemIndex()).toBe(1);
+    }));
+
+    it('navigates prev on right swipe', fakeAsync(() => {
+      configure(createImages(3));
+      const track = fixture.debugElement.query(By.css('.track')).nativeElement;
+
+      // Start at index 1 so we can go back to 0
+      component.goToItem(1);
+      flush();
+      expect(component.currentItemIndex()).toBe(1); // Verify we are at 1
+
+      triggerPointer(track, 'pointerdown', { clientX: 100 });
+      tick(50);
+      triggerPointer(track, 'pointerup', { clientX: 200 }); // Moved right by 100px
+
+      flush();
+      expect(component.currentItemIndex()).toBe(0);
+    }));
+
+    it('selects item on click/tap without drag', fakeAsync(() => {
+      configure(createImages(3));
+      const track = fixture.debugElement.query(By.css('.track')).nativeElement;
+
+      expect(component.selectedIndex()).toBeNull();
+
+      triggerPointer(track, 'pointerdown', { clientX: 100 });
+      tick(50);
+      triggerPointer(track, 'pointerup', { clientX: 100 }); // No movement
+
+      flush();
+      expect(component.selectedIndex()).toBe(0);
+    }));
+
+    it('selects item on long press (touch)', fakeAsync(() => {
+      configure(createImages(3));
+      const track = fixture.debugElement.query(By.css('.track')).nativeElement;
+
+      triggerPointer(track, 'pointerdown', { clientX: 100, pointerType: 'touch' });
+      tick(500); // Wait longer than longPressMs (450ms)
+      
+      // Should have selected already without pointerup? 
+      // The implementation calls maybeSelectFromPointer inside pointerUp? 
+      // No, check implementation: 
+      // if (pointerType === 'touch') { if (!movedFar && elapsed >= longPressMs) ... } 
+      // Oh wait, `maybeSelectFromPointer` is called in `onPointerUp`.
+      // So touch needs pointerup to select? 
+      // Let's re-read implementation.
+
+      triggerPointer(track, 'pointerup', { clientX: 100, pointerType: 'touch' });
+      
+      flush();
+      expect(component.selectedIndex()).toBe(0);
+    }));
+
+    it('does not select if dragged too far', fakeAsync(() => {
+      configure(createImages(3));
+      const track = fixture.debugElement.query(By.css('.track')).nativeElement;
+
+      triggerPointer(track, 'pointerdown', { clientX: 100 });
+      tick(50);
+      triggerPointer(track, 'pointerup', { clientX: 120 }); // Moved 20px (> tolerance 12)
+
+      flush();
+      expect(component.selectedIndex()).toBeNull();
+    }));
+
+    it('navigates with keyboard arrows', fakeAsync(() => {
+        configure(createImages(3));
+        const carousel = fixture.debugElement.query(By.css('.carousel')).nativeElement;
+        
+        carousel.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+        flush();
+        expect(component.currentItemIndex()).toBe(1);
+
+        carousel.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        flush();
+        expect(component.currentItemIndex()).toBe(0);
+    }));
+
+    it('selects with keyboard enter', fakeAsync(() => {
+        configure(createImages(3));
+        const carousel = fixture.debugElement.query(By.css('.carousel')).nativeElement;
+        
+        carousel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        flush();
+        expect(component.selectedIndex()).toBe(0);
+    }));
   });
 });
