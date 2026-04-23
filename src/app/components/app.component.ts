@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,12 +9,11 @@ import {
   CarouselImage,
   CarouselSelection,
 } from '@shlomoa/mat-image-carousel';
+import { ImagesService } from '../services/images.service';
 
-type DemoImageSeed = Readonly<{
-  id: number;
-  alt: string;
-  caption: string;
-}>;
+const DEFAULT_IMAGE_WIDTH = 3;
+const DEFAULT_IMAGE_HEIGHT = 2;
+const DEFAULT_ASPECT_RATIO = DEFAULT_IMAGE_WIDTH / DEFAULT_IMAGE_HEIGHT;
 
 @Component({
   selector: 'app-root',
@@ -31,31 +30,36 @@ type DemoImageSeed = Readonly<{
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly collectionSizeOptions = [2, 3, 4, 8, 16] as const;
-  readonly imageSizeOptions = [300, 500, 800, 1000] as const;
+  static readonly COLLECTION_SIZE_OPTIONS = [2, 3, 4, 8, 16] as const;
+  static readonly IMAGE_SIZE_OPTIONS = [300, 500, 800, 1000] as const;
 
-  private readonly demoImages: readonly DemoImageSeed[] = [
-    { id: 1015, alt: 'Mountain lake', caption: 'Lake, early morning' },
-    { id: 1025, alt: 'Puppy', caption: 'Puppy portrait' },
-    { id: 1039, alt: 'Desert road', caption: 'Desert highway' },
-    { id: 1041, alt: 'Cliff', caption: 'Cliffs by the sea' },
-    { id: 1035, alt: 'Rainbow', caption: 'Being in Awh' },
-  ];
+  private readonly imagesService = inject(ImagesService);
   private readonly selectedItemIndex = signal<number | null>(null);
-  private readonly imageAspectRatio = 3 / 2;
+  private readonly selectedCollectionSize = signal<number | null>(null);
+  private readonly shuffledImageKeys = signal<readonly string[] | null>(null);
 
+  readonly collectionSizeOptions = AppComponent.COLLECTION_SIZE_OPTIONS;
+  readonly imageSizeOptions = AppComponent.IMAGE_SIZE_OPTIONS;
   readonly selectedImageSize = signal(800);
   readonly images = computed<CarouselImage[]>(() => {
     const height = this.selectedImageSize();
-    const width = Math.round(height * this.imageAspectRatio);
+    let images = [...this.imagesService.images()];
+    const shuffledImageKeys = this.shuffledImageKeys();
 
-    return this.demoImages.map((image) => ({
-      src: `https://picsum.photos/id/${image.id}/${width}/${height}`,
-      alt: image.alt,
-      caption: image.caption,
-      width,
-      height,
-    }));
+    if (shuffledImageKeys !== null) {
+      const order = new Map(shuffledImageKeys.map((key, index) => [key, index]));
+
+      images.sort(
+        (left, right) =>
+          (order.get(this.getImageKey(left)) ?? Number.MAX_SAFE_INTEGER) -
+          (order.get(this.getImageKey(right)) ?? Number.MAX_SAFE_INTEGER),
+      );
+    }
+
+    const collectionSize = this.selectedCollectionSize();
+    const visibleImages = collectionSize === null ? images : images.slice(0, collectionSize);
+
+    return visibleImages.map((image) => this.resizeImage(image, height));
   });
 
   readonly selectedIndex = computed(() => {
@@ -71,11 +75,62 @@ export class AppComponent {
     this.selectedItemIndex.set(selection.index);
   }
 
-  onShuffle(): void {}
+  onShuffle(): void {
+    const shuffledImageKeys = [...this.imagesService.images().map((image) => this.getImageKey(image))];
+
+    for (let currentIndex = shuffledImageKeys.length - 1; currentIndex > 0; currentIndex -= 1) {
+      const swapIndex = Math.floor(Math.random() * (currentIndex + 1));
+      [shuffledImageKeys[currentIndex], shuffledImageKeys[swapIndex]] = [
+        shuffledImageKeys[swapIndex],
+        shuffledImageKeys[currentIndex],
+      ];
+    }
+
+    this.shuffledImageKeys.set(shuffledImageKeys);
+    this.selectedItemIndex.set(null);
+  }
 
   setImageSize(size: number): void {
     this.selectedImageSize.set(size);
   }
 
-  emptyCallback(_value?: number): void {}
+  setCollectionSize(size?: number): void {
+    this.selectedCollectionSize.set(size ?? null);
+    this.selectedItemIndex.update((index) => this.getVisibleSelectedIndex(index, size));
+  }
+
+  private resizeImage(image: CarouselImage, height: number): CarouselImage {
+    const width = Math.round(height * this.getAspectRatio(image));
+    const id = this.getPicsumId(image.src);
+
+    return {
+      ...image,
+      src: id === null ? image.src : `https://picsum.photos/id/${id}/${width}/${height}`,
+      width,
+      height,
+    };
+  }
+
+  private getAspectRatio(image: CarouselImage): number {
+    const width = image.width ?? DEFAULT_IMAGE_WIDTH;
+    const height = image.height ?? DEFAULT_IMAGE_HEIGHT;
+
+    return height > 0 ? width / height : DEFAULT_ASPECT_RATIO;
+  }
+
+  private getPicsumId(src: string): string | null {
+    return src.match(/\/id\/([^/]+)\//)?.[1] ?? null;
+  }
+
+  private getImageKey(image: CarouselImage): string {
+    return this.getPicsumId(image.src) ?? image.src;
+  }
+
+  private getVisibleSelectedIndex(index: number | null, collectionSize?: number): number | null {
+    if (index === null || collectionSize === undefined) {
+      return index;
+    }
+
+    return index < collectionSize ? index : null;
+  }
 }

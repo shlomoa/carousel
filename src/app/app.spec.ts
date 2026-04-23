@@ -1,11 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { signal } from '@angular/core';
 import { AppComponent } from './components/app.component';
-import { CarouselSelection, ImageCarouselComponent } from '@shlomoa/mat-image-carousel';
+import { CarouselImage, CarouselSelection, ImageCarouselComponent } from '@shlomoa/mat-image-carousel';
+import { ImagesService } from './services/images.service';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
+  const testImages: CarouselImage[] = [
+    { src: 'https://picsum.photos/id/10/1200/800', alt: 'Test image 1', width: 1200, height: 800 },
+    { src: 'https://picsum.photos/id/11/1200/800', alt: 'Test image 2', width: 1200, height: 800 },
+  ];
 
   beforeAll(() => {
     const href = 'https://picsum.photos';
@@ -21,6 +27,14 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [
+        {
+          provide: ImagesService,
+          useValue: {
+            images: signal(testImages),
+          },
+        },
+      ],
     }).compileComponents();
   });
 
@@ -35,7 +49,7 @@ describe('AppComponent', () => {
   });
 
   it('initializes with a list of images', () => {
-    expect(component.images().length).toBeGreaterThan(0);
+    expect(component.images()).toEqual(testImages);
     const carouselDebugEl = fixture.debugElement.query(By.directive(ImageCarouselComponent));
     expect(carouselDebugEl).toBeTruthy();
   });
@@ -85,5 +99,29 @@ describe('AppComponent', () => {
     expect(selectedImage?.src).toContain('/1500/1000');
     expect(selectedImage?.width).toBe(1500);
     expect(selectedImage?.height).toBe(1000);
+  });
+  it('limits the visible images when a collection size is selected', () => {
+    component.onSelectionChange({ index: 1, image: component.images()[1] } as CarouselSelection);
+    component.setCollectionSize(1);
+    fixture.detectChanges();
+
+    expect(component.images().length).toBe(1);
+    expect(component.selectedIndex()).toBeNull();
+    expect(component.selectedImage()).toBeNull();
+  });
+
+  it('shuffles the image order and clears the current selection', () => {
+    spyOn(Math, 'random').and.returnValues(0, 0);
+    component.onSelectionChange({ index: 0, image: component.images()[0] } as CarouselSelection);
+
+    component.onShuffle();
+    fixture.detectChanges();
+
+    expect(component.selectedIndex()).toBeNull();
+    expect(component.selectedImage()).toBeNull();
+    expect(component.images().map((image) => image.src)).toEqual([
+      'https://picsum.photos/id/11/1200/800',
+      'https://picsum.photos/id/10/1200/800',
+    ]);
   });
 });
