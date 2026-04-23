@@ -11,6 +11,10 @@ import {
 } from '@shlomoa/mat-image-carousel';
 import { ImagesService } from '../services/images.service';
 
+const DEFAULT_IMAGE_WIDTH = 3;
+const DEFAULT_IMAGE_HEIGHT = 2;
+const DEFAULT_ASPECT_RATIO = DEFAULT_IMAGE_WIDTH / DEFAULT_IMAGE_HEIGHT;
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -26,13 +30,16 @@ import { ImagesService } from '../services/images.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  static readonly collectionSizeOptions = [2, 3, 4, 8, 16] as const;
+  static readonly imageSizeOptions = [300, 500, 800, 1000] as const;
+
   private readonly imagesService = inject(ImagesService);
-  readonly collectionSizeOptions = [2, 3, 4, 8, 16] as const;
-  readonly imageSizeOptions = [300, 500, 800, 1000] as const;
   private readonly selectedItemIndex = signal<number | null>(null);
   private readonly selectedCollectionSize = signal<number | null>(null);
   private readonly shuffledImageKeys = signal<readonly string[] | null>(null);
 
+  readonly collectionSizeOptions = AppComponent.collectionSizeOptions;
+  readonly imageSizeOptions = AppComponent.imageSizeOptions;
   readonly selectedImageSize = signal(800);
   readonly images = computed<CarouselImage[]>(() => {
     const height = this.selectedImageSize();
@@ -89,7 +96,7 @@ export class AppComponent {
 
   setCollectionSize(size?: number): void {
     this.selectedCollectionSize.set(size ?? null);
-    this.selectedItemIndex.update((index) => (index !== null && size !== undefined && index >= size ? null : index));
+    this.selectedItemIndex.update((index) => this.getVisibleSelectedIndex(index, size));
   }
 
   private resizeImage(image: CarouselImage, height: number): CarouselImage {
@@ -105,10 +112,10 @@ export class AppComponent {
   }
 
   private getAspectRatio(image: CarouselImage): number {
-    const width = image.width ?? 3;
-    const height = image.height ?? 2;
+    const width = image.width ?? DEFAULT_IMAGE_WIDTH;
+    const height = image.height ?? DEFAULT_IMAGE_HEIGHT;
 
-    return height > 0 ? width / height : 3 / 2;
+    return height > 0 ? width / height : DEFAULT_ASPECT_RATIO;
   }
 
   private getPicsumId(src: string): string | null {
@@ -117,5 +124,13 @@ export class AppComponent {
 
   private getImageKey(image: CarouselImage): string {
     return this.getPicsumId(image.src) ?? image.src;
+  }
+
+  private getVisibleSelectedIndex(index: number | null, collectionSize?: number): number | null {
+    if (index === null || collectionSize === undefined) {
+      return index;
+    }
+
+    return index < collectionSize ? index : null;
   }
 }

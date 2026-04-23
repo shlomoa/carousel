@@ -23,6 +23,7 @@
     <button
       mat-button
       type="button"
+      [attr.aria-label]="'Image size: ' + selectedImageSize() + ' pixels'"
       [matMenuTriggerFor]="imageSizeMenu"
     >
       <span>Size {{ selectedImageSize() }}</span>
