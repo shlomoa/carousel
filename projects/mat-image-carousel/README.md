@@ -55,34 +55,7 @@ export class DemoShellComponent {
 - `UplevelComponent`: decorative Material button that emits an `activated` event.
 - `CarouselImage`, `CarouselSelection`: shared TypeScript interfaces.
 
-## Building & Testing
-
-From the workspace root:
-
-```bash
-npm run build:lib   # ng build mat-image-carousel
-npm run test        # runs both app and library karma suites
-```
-
-## Packaging
-
-Generate a tarball you can sideload into another project:
-
-```bash
-npm run pack:lib
-```
-
-The command creates `dist/mat-image-carousel/shlomoa-mat-image-carousel-<version>.tgz`.
-
-## Publishing
-
-Publish the library to npm (requires an authenticated npm session):
-
-```bash
-npm run publish:lib
-```
-
-This script builds the library and publishes the contents of `dist/mat-image-carousel/` with `access=public`.
+Repository build and release workflows are documented in [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
 ## License
 
