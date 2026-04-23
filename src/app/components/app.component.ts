@@ -30,16 +30,16 @@ const DEFAULT_ASPECT_RATIO = DEFAULT_IMAGE_WIDTH / DEFAULT_IMAGE_HEIGHT;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  static readonly collectionSizeOptions = [2, 3, 4, 8, 16] as const;
-  static readonly imageSizeOptions = [300, 500, 800, 1000] as const;
+  static readonly COLLECTION_SIZE_OPTIONS = [2, 3, 4, 8, 16] as const;
+  static readonly IMAGE_SIZE_OPTIONS = [300, 500, 800, 1000] as const;
 
   private readonly imagesService = inject(ImagesService);
   private readonly selectedItemIndex = signal<number | null>(null);
   private readonly selectedCollectionSize = signal<number | null>(null);
   private readonly shuffledImageKeys = signal<readonly string[] | null>(null);
 
-  readonly collectionSizeOptions = AppComponent.collectionSizeOptions;
-  readonly imageSizeOptions = AppComponent.imageSizeOptions;
+  readonly collectionSizeOptions = AppComponent.COLLECTION_SIZE_OPTIONS;
+  readonly imageSizeOptions = AppComponent.IMAGE_SIZE_OPTIONS;
   readonly selectedImageSize = signal(800);
   readonly images = computed<CarouselImage[]>(() => {
     const height = this.selectedImageSize();
@@ -78,11 +78,11 @@ export class AppComponent {
   onShuffle(): void {
     const shuffledImageKeys = [...this.imagesService.images().map((image) => this.getImageKey(image))];
 
-    for (let index = shuffledImageKeys.length - 1; index > 0; index -= 1) {
-      const swapIndex = Math.floor(Math.random() * (index + 1));
-      [shuffledImageKeys[index], shuffledImageKeys[swapIndex]] = [
+    for (let currentIndex = shuffledImageKeys.length - 1; currentIndex > 0; currentIndex -= 1) {
+      const swapIndex = Math.floor(Math.random() * (currentIndex + 1));
+      [shuffledImageKeys[currentIndex], shuffledImageKeys[swapIndex]] = [
         shuffledImageKeys[swapIndex],
-        shuffledImageKeys[index],
+        shuffledImageKeys[currentIndex],
       ];
     }
 
