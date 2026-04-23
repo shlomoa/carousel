@@ -32,34 +32,21 @@ const DEFAULT_ASPECT_RATIO = DEFAULT_IMAGE_WIDTH / DEFAULT_IMAGE_HEIGHT;
 export class AppComponent {
   static readonly COLLECTION_SIZE_OPTIONS = [2, 3, 4, 8, 16] as const;
   static readonly IMAGE_SIZE_OPTIONS = [300, 500, 800, 1000] as const;
+  static readonly DEFAULT_COLLECTION_SIZE = AppComponent.COLLECTION_SIZE_OPTIONS[2];
 
   private readonly imagesService = inject(ImagesService);
   private readonly selectedItemIndex = signal<number | null>(null);
-  private readonly selectedCollectionSize = signal<number | null>(null);
-  private readonly shuffledImageKeys = signal<readonly string[] | null>(null);
+  private readonly selectedCollectionSize = signal<number>(AppComponent.DEFAULT_COLLECTION_SIZE);
+  private readonly imageSet = signal<CarouselImage[]>(
+    this.imagesService.getRandom(AppComponent.DEFAULT_COLLECTION_SIZE),
+  );
 
   readonly collectionSizeOptions = AppComponent.COLLECTION_SIZE_OPTIONS;
   readonly imageSizeOptions = AppComponent.IMAGE_SIZE_OPTIONS;
   readonly selectedImageSize = signal(800);
   readonly images = computed<CarouselImage[]>(() => {
     const height = this.selectedImageSize();
-    let images = [...this.imagesService.images()];
-    const shuffledImageKeys = this.shuffledImageKeys();
-
-    if (shuffledImageKeys !== null) {
-      const order = new Map(shuffledImageKeys.map((key, index) => [key, index]));
-
-      images.sort(
-        (left, right) =>
-          (order.get(this.getImageKey(left)) ?? Number.MAX_SAFE_INTEGER) -
-          (order.get(this.getImageKey(right)) ?? Number.MAX_SAFE_INTEGER),
-      );
-    }
-
-    const collectionSize = this.selectedCollectionSize();
-    const visibleImages = collectionSize === null ? images : images.slice(0, collectionSize);
-
-    return visibleImages.map((image) => this.resizeImage(image, height));
+    return this.imageSet().map((image) => this.resizeImage(image, height));
   });
 
   readonly selectedIndex = computed(() => {
@@ -76,17 +63,7 @@ export class AppComponent {
   }
 
   onShuffle(): void {
-    const shuffledImageKeys = [...this.imagesService.images().map((image) => this.getImageKey(image))];
-
-    for (let currentIndex = shuffledImageKeys.length - 1; currentIndex > 0; currentIndex -= 1) {
-      const swapIndex = Math.floor(Math.random() * (currentIndex + 1));
-      [shuffledImageKeys[currentIndex], shuffledImageKeys[swapIndex]] = [
-        shuffledImageKeys[swapIndex],
-        shuffledImageKeys[currentIndex],
-      ];
-    }
-
-    this.shuffledImageKeys.set(shuffledImageKeys);
+    this.imageSet.set(this.imagesService.getRandom(this.selectedCollectionSize()));
     this.selectedItemIndex.set(null);
   }
 
@@ -95,8 +72,11 @@ export class AppComponent {
   }
 
   setCollectionSize(size?: number): void {
-    this.selectedCollectionSize.set(size ?? null);
-    this.selectedItemIndex.update((index) => this.getVisibleSelectedIndex(index, size));
+    const collectionSize = size ?? AppComponent.DEFAULT_COLLECTION_SIZE;
+
+    this.selectedCollectionSize.set(collectionSize);
+    this.imageSet.set(this.imagesService.getRandom(collectionSize));
+    this.selectedItemIndex.set(null);
   }
 
   private resizeImage(image: CarouselImage, height: number): CarouselImage {
@@ -120,17 +100,5 @@ export class AppComponent {
 
   private getPicsumId(src: string): string | null {
     return src.match(/\/id\/([^/]+)\//)?.[1] ?? null;
-  }
-
-  private getImageKey(image: CarouselImage): string {
-    return this.getPicsumId(image.src) ?? image.src;
-  }
-
-  private getVisibleSelectedIndex(index: number | null, collectionSize?: number): number | null {
-    if (index === null || collectionSize === undefined) {
-      return index;
-    }
-
-    return index < collectionSize ? index : null;
   }
 }

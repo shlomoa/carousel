@@ -32,7 +32,10 @@
   </div>
 </mat-toolbar>
 
-<mat-menu #selectionMenu="matMenu">
+<mat-menu
+  #selectionMenu="matMenu"
+  class="topbar-menu-panel"
+>
   <button
     mat-menu-item
     type="button"
@@ -51,7 +54,10 @@
   </button>
 </mat-menu>
 
-<mat-menu #collectionSizeMenu="matMenu">
+<mat-menu
+  #collectionSizeMenu="matMenu"
+  class="topbar-menu-panel"
+>
   @for (size of collectionSizeOptions; track size) {
     <button
       mat-menu-item
@@ -63,7 +69,10 @@
   }
 </mat-menu>
 
-<mat-menu #imageSizeMenu="matMenu">
+<mat-menu
+  #imageSizeMenu="matMenu"
+  class="topbar-menu-panel"
+>
   @for (size of imageSizeOptions; track size) {
     <button
       mat-menu-item

@@ -16,9 +16,7 @@ const INITIAL_IMAGES: CarouselImage[] = [
 
 @Injectable({ providedIn: 'root' })
 export class ImagesService {
-  private readonly imagesState = signal<CarouselImage[]>(INITIAL_IMAGES);
-
-  readonly images = this.imagesState.asReadonly();
+  private readonly images = signal<CarouselImage[]>(INITIAL_IMAGES);
 
   constructor() {
     void this.scanImages();
@@ -55,7 +53,7 @@ export class ImagesService {
 
     discoveredImages.sort((left, right) => left.id - right.id);
 
-    this.imagesState.update((images) => this.mergeImages(images, discoveredImages.map(({ image }) => image)));
+    this.images.update((images) => this.mergeImages(images, discoveredImages.map(({ image }) => image)));
   }
 
   private createScannedImage(id: number): CarouselImage {
@@ -88,5 +86,15 @@ export class ImagesService {
     }
 
     return Array.from(uniqueImages.values());
+  }
+
+  getRandom(size: number): CarouselImage[] {
+    // Fisher-Yates shuffle algorithm is more efficient and unbiased
+    const shuffled = [...this.images()]; // Create a copy to avoid mutating the original
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, size);
   }
 }
