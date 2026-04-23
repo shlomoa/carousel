@@ -44,6 +44,7 @@ describe('ImagesService', () => {
 
     expect(window.fetch).toHaveBeenCalledTimes(1500);
     expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/1/info');
+    expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/750/info');
     expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/1500/info');
     expect(service.images().map((image) => image.src)).toEqual([
       'https://picsum.photos/id/1015/1200/800',
