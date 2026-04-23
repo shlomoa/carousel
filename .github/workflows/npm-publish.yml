@@ -44,6 +44,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run pack:lib
-      - run: npm publish ./dist/mat-image-carousel --access public --tag "${{ inputs.npm-tag }}"
+      - run: cd ./dist/mat-image-carousel && npm publish --access public --tag "${{ inputs.npm-tag }}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
