@@ -24,4 +24,5 @@ jobs:
           tmpversion="$(./scripts/tag_latest_commit.sh)"
           echo "GITTAGVER=$tmpversion" >> "$GITHUB_OUTPUT"
           echo "Computed GITTAGVER=$tmpversion"
-          gh tag create "$tmpversion" --repo="$GITHUB_REPOSITORY" -m "Tagging version $tmpversion"
+          git tag "$tmpversion" -m "Tagging version $tmpversion"
+          git push origin "$tmpversion"
