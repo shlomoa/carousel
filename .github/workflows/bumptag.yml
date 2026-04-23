@@ -21,8 +21,5 @@ jobs:
       - id: set_version
         name: Set tag version and apply tag
         run: |
-          tmpversion="$(./scripts/tag_latest_commit.sh)"
-          echo "GITTAGVER=$tmpversion" >> "$GITHUB_OUTPUT"
-          echo "Computed GITTAGVER=$tmpversion"
-          git tag "$tmpversion" -m "Tagging version $tmpversion"
-          git push origin "$tmpversion"
+          tmpversion="$(./scripts/bump_tag_main_latest.sh)"
+          echo "Bumpted to tag $tmpversion"
