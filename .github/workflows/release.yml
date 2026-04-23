@@ -1,4 +1,4 @@
-name: Create release
+name: Bump version and tag main
 
 on:
   push:

@@ -1,0 +1,28 @@
+name: Bump version and tag main
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  bumptag:
+    runs-on: ubuntu-latest
+    outputs:
+      GITTAGVER: ${{ steps.set_version.outputs.GITTAGVER }}
+    steps:
+      - id: checkout
+        name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - id: set_version
+        name: Set tag version and apply tag
+        run: |
+          tmpversion="$(./scripts/tag_latest_commit.sh)"
+          echo "GITTAGVER=$tmpversion" >> "$GITHUB_OUTPUT"
+          echo "Computed GITTAGVER=$tmpversion"
+          gh tag create "$tmpversion" --repo="$GITHUB_REPOSITORY" -m "Tagging version $tmpversion"

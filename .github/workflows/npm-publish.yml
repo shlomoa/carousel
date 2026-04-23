@@ -4,8 +4,9 @@
 name: Node.js Package
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
 jobs:
   build:
@@ -18,7 +19,6 @@ jobs:
       - name: Debug trigger
         run: |
           echo "Event name: $GITHUB_EVENT_NAME"
-          echo "Release tag: ${{ github.event.release.tag_name }}"
           echo "Actor: $GITHUB_ACTOR"
       - uses: actions/setup-node@v4
         with:
