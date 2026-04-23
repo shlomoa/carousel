@@ -56,7 +56,7 @@ export class AppComponent {
     this.selectedImageSize.set(size);
   }
 
-  emptyCallback(_value?: number): void {}
+  setCollectionSize(_value?: number): void {}
 
   private resizeImage(image: CarouselImage, height: number): CarouselImage {
     const width = Math.round(height * this.getAspectRatio(image));
