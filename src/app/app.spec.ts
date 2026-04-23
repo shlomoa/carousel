@@ -100,4 +100,29 @@ describe('AppComponent', () => {
     expect(selectedImage?.width).toBe(1500);
     expect(selectedImage?.height).toBe(1000);
   });
+
+  it('limits the visible images when a collection size is selected', () => {
+    component.onSelectionChange({ index: 1, image: component.images()[1] } as CarouselSelection);
+    component.setCollectionSize(1);
+    fixture.detectChanges();
+
+    expect(component.images().length).toBe(1);
+    expect(component.selectedIndex()).toBeNull();
+    expect(component.selectedImage()).toBeNull();
+  });
+
+  it('shuffles the image order and clears the current selection', () => {
+    spyOn(Math, 'random').and.returnValues(0, 0);
+    component.onSelectionChange({ index: 0, image: component.images()[0] } as CarouselSelection);
+
+    component.onShuffle();
+    fixture.detectChanges();
+
+    expect(component.selectedIndex()).toBeNull();
+    expect(component.selectedImage()).toBeNull();
+    expect(component.images().map((image) => image.src)).toEqual([
+      'https://picsum.photos/id/11/1200/800',
+      'https://picsum.photos/id/10/1200/800',
+    ]);
+  });
 });

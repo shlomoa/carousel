@@ -30,11 +30,29 @@ export class AppComponent {
   readonly collectionSizeOptions = [2, 3, 4, 8, 16] as const;
   readonly imageSizeOptions = [300, 500, 800, 1000] as const;
   private readonly selectedItemIndex = signal<number | null>(null);
+  private readonly selectedCollectionSize = signal<number | null>(null);
+  private readonly shuffledImageKeys = signal<readonly string[] | null>(null);
 
   readonly selectedImageSize = signal(800);
   readonly images = computed<CarouselImage[]>(() => {
     const height = this.selectedImageSize();
-    return this.imagesService.images().map((image) => this.resizeImage(image, height));
+    let images = [...this.imagesService.images()];
+    const shuffledImageKeys = this.shuffledImageKeys();
+
+    if (shuffledImageKeys !== null) {
+      const order = new Map(shuffledImageKeys.map((key, index) => [key, index]));
+
+      images.sort(
+        (left, right) =>
+          (order.get(this.getImageKey(left)) ?? Number.MAX_SAFE_INTEGER) -
+          (order.get(this.getImageKey(right)) ?? Number.MAX_SAFE_INTEGER),
+      );
+    }
+
+    const collectionSize = this.selectedCollectionSize();
+    const visibleImages = collectionSize === null ? images : images.slice(0, collectionSize);
+
+    return visibleImages.map((image) => this.resizeImage(image, height));
   });
 
   readonly selectedIndex = computed(() => {
@@ -50,13 +68,29 @@ export class AppComponent {
     this.selectedItemIndex.set(selection.index);
   }
 
-  onShuffle(): void {}
+  onShuffle(): void {
+    const shuffledImageKeys = [...this.imagesService.images().map((image) => this.getImageKey(image))];
+
+    for (let index = shuffledImageKeys.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [shuffledImageKeys[index], shuffledImageKeys[swapIndex]] = [
+        shuffledImageKeys[swapIndex],
+        shuffledImageKeys[index],
+      ];
+    }
+
+    this.shuffledImageKeys.set(shuffledImageKeys);
+    this.selectedItemIndex.set(null);
+  }
 
   setImageSize(size: number): void {
     this.selectedImageSize.set(size);
   }
 
-  setCollectionSize(_value?: number): void {}
+  setCollectionSize(size?: number): void {
+    this.selectedCollectionSize.set(size ?? null);
+    this.selectedItemIndex.update((index) => (index !== null && size !== undefined && index >= size ? null : index));
+  }
 
   private resizeImage(image: CarouselImage, height: number): CarouselImage {
     const width = Math.round(height * this.getAspectRatio(image));
@@ -79,5 +113,9 @@ export class AppComponent {
 
   private getPicsumId(src: string): string | null {
     return src.match(/\/id\/([^/]+)\//)?.[1] ?? null;
+  }
+
+  private getImageKey(image: CarouselImage): string {
+    return this.getPicsumId(image.src) ?? image.src;
   }
 }
