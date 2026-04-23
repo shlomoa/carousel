@@ -100,7 +100,6 @@ describe('AppComponent', () => {
     expect(selectedImage?.width).toBe(1500);
     expect(selectedImage?.height).toBe(1000);
   });
-
   it('limits the visible images when a collection size is selected', () => {
     component.onSelectionChange({ index: 1, image: component.images()[1] } as CarouselSelection);
     component.setCollectionSize(1);
