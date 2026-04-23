@@ -21,5 +21,6 @@ jobs:
       - id: set_version
         name: Set tag version and apply tag
         run: |
+          chmod +x ./scripts/bump_tag_main_latest.sh
           tmpversion="$(./scripts/bump_tag_main_latest.sh)"
           echo "Bumpted to tag $tmpversion"
