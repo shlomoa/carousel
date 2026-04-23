@@ -310,7 +310,7 @@ export class ImageCarouselComponent implements OnDestroy {
 
   private createSlides(items: readonly CarouselImage[]): CarouselSlide[] {
     const slides = items.map((image, index) => ({
-      id: `slide-${index}`,
+      id: `slide-${index}-${image.width ?? 1}x${image.height ?? 1}`,
       image,
       itemIndex: index,
     }));

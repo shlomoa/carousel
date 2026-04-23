@@ -35,14 +35,6 @@ npm start
 
 The carousel reloads automatically when source files change. Use `--host`/`--port` flags if you need to expose the server to other devices (e.g., `npm start -- --host 0.0.0.0 --port 8080`).
 
-## How to Build for Production
-
-Generate an optimised production bundle under `dist/photo-carousel-demo/`:
-
-```
-npm run build
-```
-
 ## How to Run Tests
 
 Execute the Karma/Jasmine unit tests in headless Chrome:
@@ -81,26 +73,13 @@ Watch mode is available with `npm test -- --watch=true`.
 
 For deeper architectural notes—including signal wiring, animation timing, and accessibility considerations—see [`docs/CAROUSEL_SPEC.md`](./docs/CAROUSEL_SPEC.md).
 
-## Library Distribution
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request with your proposed changes. For major changes, please open an issue first to discuss what you would like to change.
+Build and release workflows live in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-The carousel components now ship as a standalone library under `projects/mat-image-carousel`.
+## Acknowledgements
 
-- Install from npm:
-	```
-	npm install @shlomoa/mat-image-carousel
-	```
-- Import the standalone components directly into your Angular feature modules or components:
-	```ts
-	import { ImageCarouselComponent, SelectionDetailsComponent } from '@shlomoa/mat-image-carousel';
-	```
-- Build / pack / publish from the workspace root:
-	- `npm run build:lib` – run `ng build mat-image-carousel`
-	- `npm run pack:lib` – build and produce a `.tgz` via `npm pack`
-	- `npm run publish:lib` – build and publish to npm (requires login)
-
-`npm run pack:lib` emits `dist/mat-image-carousel/shlomoa-mat-image-carousel-<version>.tgz`, which you can install with `npm install ./shlomoa-mat-image-carousel-<version>.tgz` in another project.
-
-See [`projects/mat-image-carousel/README.md`](./projects/mat-image-carousel/README.md) for full usage details and API docs.
+Demo imagery is provided by [picsum.photos](https://picsum.photos/).
 
 ## License
 

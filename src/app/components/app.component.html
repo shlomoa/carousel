@@ -1,3 +1,79 @@
+<mat-toolbar class="topbar">
+  <a
+    mat-button
+    class="home-link"
+    href="https://www.softwacky.com"
+  >
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
+  </a>
+
+  <span class="topbar__spacer"></span>
+
+  <div class="topbar__actions">
+    <button
+      mat-button
+      type="button"
+      [matMenuTriggerFor]="selectionMenu"
+    >
+      <span>Selection</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <button
+      mat-button
+      type="button"
+      [matMenuTriggerFor]="imageSizeMenu"
+    >
+      <span>Size {{ selectedImageSize() }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<mat-menu #selectionMenu="matMenu">
+  <button
+    mat-menu-item
+    type="button"
+    (click)="onShuffle()"
+  >
+    <mat-icon>shuffle</mat-icon>
+    <span>Shuffle</span>
+  </button>
+
+  <button
+    mat-menu-item
+    type="button"
+    [matMenuTriggerFor]="collectionSizeMenu"
+  >
+    <span>Collection size</span>
+  </button>
+</mat-menu>
+
+<mat-menu #collectionSizeMenu="matMenu">
+  @for (size of collectionSizeOptions; track size) {
+    <button
+      mat-menu-item
+      type="button"
+      (click)="emptyCallback(size)"
+    >
+      <span>{{ size }}</span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #imageSizeMenu="matMenu">
+  @for (size of imageSizeOptions; track size) {
+    <button
+      mat-menu-item
+      type="button"
+      (click)="setImageSize(size)"
+    >
+      <span>{{ size }}</span>
+    </button>
+  }
+</mat-menu>
+
 <main class="container">
   <image-carousel
     [images]="images()"

@@ -55,42 +55,49 @@ describe('AppComponent', () => {
   });
 
   it('updates selection state when carousel emits selection change', () => {
-    // Find the carousel component
     const carouselDebugEl = fixture.debugElement.query(By.directive(ImageCarouselComponent));
-    
-    // Create a mock selection event
     const firstImage = component.images()[0];
     const selection = { index: 0, image: firstImage } as CarouselSelection;
 
-    // Trigger the output event
     carouselDebugEl.componentInstance.selectionChange.emit(selection);
     fixture.detectChanges();
 
-    // Verify component state updated
     expect(component.selectedIndex()).toBe(0);
     expect(component.selectedImage()).toBe(firstImage);
   });
 
   it('renders resolved selection details in the DOM', () => {
-    // Manually trigger selection change
     const secondImage = component.images()[1];
     const selection = { index: 1, image: secondImage } as CarouselSelection;
     component.onSelectionChange(selection);
     fixture.detectChanges();
 
-    // Verify DOM updates
-    // The selection-details component renders inside the app.component template.
-    // We check if the text content reflects the selected image.
     const detailsElement = fixture.debugElement.query(By.css('selection-details'));
     expect(detailsElement).toBeTruthy();
-    
-    // Since selection-details uses shadow DOM or projection, we might need to check its text content or inputs.
-    // But checking inputs is safer for integration if we don't want to rely on child's implementation details too much.
-    // However, checking rendered text is darker integration.
-    
-    // Let's check inputs of the child component
     const detailsInstance = detailsElement.componentInstance;
     expect(detailsInstance.index()).toBe(1);
     expect(detailsInstance.image()).toEqual(secondImage);
+  });
+
+  it('updates the generated image dimensions when a size is selected', () => {
+    component.setImageSize(300);
+    fixture.detectChanges();
+
+    const firstImage = component.images()[0];
+    expect(firstImage.src).toContain('/450/300');
+    expect(firstImage.width).toBe(450);
+    expect(firstImage.height).toBe(300);
+  });
+
+  it('keeps the current selection synced with resized images', () => {
+    component.onSelectionChange({ index: 1, image: component.images()[1] } as CarouselSelection);
+    component.setImageSize(1000);
+    fixture.detectChanges();
+
+    const selectedImage = component.selectedImage();
+    expect(component.selectedIndex()).toBe(1);
+    expect(selectedImage?.src).toContain('/1500/1000');
+    expect(selectedImage?.width).toBe(1500);
+    expect(selectedImage?.height).toBe(1000);
   });
 });
