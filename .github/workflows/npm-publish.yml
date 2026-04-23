@@ -5,6 +5,11 @@ name: Node.js Package
 
 on:
   workflow_dispatch:
+    inputs:
+      npm-tag:
+        description: npm dist-tag to publish under
+        required: true
+        default: latest
 
 jobs:
   build:
@@ -39,6 +44,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run pack:lib
-      - run: npm run publish:lib
+      - run: npm publish ./dist/photo-carousel-demo --access public --provenance --tag "${{ inputs.npm-tag }}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
