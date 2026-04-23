@@ -4,7 +4,7 @@ This project contains both the demo application and the `@shlomoa/mat-image-caro
 
 ## Build the Demo for Production
 
-Generate an optimised production bundle under `dist/mat-image-carousel/`:
+Generate an optimised production bundle under `dist/photo-carousel-demo/`:
 
 ```bash
 npm run build

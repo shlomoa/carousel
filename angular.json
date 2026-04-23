@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "mat-image-carousel": {
+    "photo-carousel-demo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/photo-carousel-demo",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -61,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "mat-image-carousel:build:production"
+              "buildTarget": "photo-carousel-demo:build:production"
             },
             "development": {
-              "buildTarget": "mat-image-carousel:build:development"
+              "buildTarget": "photo-carousel-demo:build:development"
             }
           },
           "defaultConfiguration": "development"
