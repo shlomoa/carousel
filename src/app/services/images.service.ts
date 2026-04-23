@@ -42,7 +42,7 @@ export class ImagesService {
 
           const image = this.createScannedImage(id);
 
-          if (await this.canLoadImage(image.src)) {
+          if (await this.hasImageInfo(id)) {
             discoveredImages.push({ id, image });
           }
         }
@@ -68,14 +68,14 @@ export class ImagesService {
     };
   }
 
-  private canLoadImage(src: string): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      const image = new Image();
+  private async hasImageInfo(id: number): Promise<boolean> {
+    try {
+      const response = await fetch(`https://picsum.photos/id/${id}/info`);
 
-      image.onload = () => resolve(true);
-      image.onerror = () => resolve(false);
-      image.src = src;
-    });
+      return response.ok;
+    } catch {
+      return false;
+    }
   }
 
   private mergeImages(existingImages: CarouselImage[], discoveredImages: CarouselImage[]): CarouselImage[] {

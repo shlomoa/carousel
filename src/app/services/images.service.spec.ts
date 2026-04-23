@@ -2,44 +2,27 @@ import { fakeAsync, flush } from '@angular/core/testing';
 import { ImagesService } from './images.service';
 
 describe('ImagesService', () => {
-  const originalImage = window.Image;
+  const originalFetch = window.fetch;
 
-  function installImageMock(loadableIds: Set<number>) {
-    class MockImage {
-      onload: null | (() => void) = null;
-      onerror: null | (() => void) = null;
+  function installFetchMock(loadableIds: Set<number>) {
+    window.fetch = jasmine
+      .createSpy('fetch')
+      .and.callFake((input: RequestInfo | URL) => {
+        const value = input instanceof URL ? input.href : input.toString();
+        const id = Number(value.match(/\/id\/(\d+)\/info$/)?.[1]);
 
-      set src(value: string) {
-        const id = Number(value.match(/\/id\/(\d+)\//)?.[1]);
-
-        setTimeout(() => {
-          if (loadableIds.has(id)) {
-            this.onload?.();
-            return;
-          }
-
-          this.onerror?.();
-});
-      }
-    }
-
-    Object.defineProperty(window, 'Image', {
-      configurable: true,
-      writable: true,
-      value: MockImage,
-    });
+        return Promise.resolve({
+          ok: loadableIds.has(id),
+        } as Response);
+      });
   }
 
   afterEach(() => {
-    Object.defineProperty(window, 'Image', {
-      configurable: true,
-      writable: true,
-      value: originalImage,
-    });
+    window.fetch = originalFetch;
   });
 
   it('starts with the seeded images before the scan resolves', () => {
-    installImageMock(new Set());
+    installFetchMock(new Set());
 
     const service = new ImagesService();
 
@@ -50,10 +33,11 @@ describe('ImagesService', () => {
       'https://picsum.photos/id/1039/1200/800',
       'https://picsum.photos/id/1041/1200/800',
     ]);
+    expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/1/info');
   });
 
   it('appends scanned images that can be loaded and skips duplicates', fakeAsync(() => {
-    installImageMock(new Set([1, 2, 1015]));
+    installFetchMock(new Set([1, 2, 1015]));
 
     const service = new ImagesService();
 
