@@ -26,10 +26,10 @@ describe('ImagesService', () => {
 
     const service = new ImagesService();
 
-const images = (service as unknown as { images: () => { src: string }[] }).images;
+    const images = (service as unknown as { images: () => { src: string }[] }).images;
 
-expect(images().length).toBe(4);
-expect(images().map((image) => image.src)).toEqual([
+    expect(images().length).toBe(4);
+    expect(images().map((image) => image.src)).toEqual([
       'https://picsum.photos/id/1015/1200/800',
       'https://picsum.photos/id/1025/1200/800',
       'https://picsum.photos/id/1039/1200/800',
