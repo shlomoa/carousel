@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { signal } from '@angular/core';
 import { AppComponent } from './components/app.component';
 import { CarouselImage, CarouselSelection, ImageCarouselComponent } from '@shlomoa/mat-image-carousel';
 import { ImagesService } from './services/images.service';
@@ -8,6 +7,7 @@ import { ImagesService } from './services/images.service';
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
+  let getRandomSpy: jasmine.Spy<(size: number) => CarouselImage[]>;
   const testImages: CarouselImage[] = [
     { src: 'https://picsum.photos/id/10/1200/800', alt: 'Test image 1', width: 1200, height: 800 },
     { src: 'https://picsum.photos/id/11/1200/800', alt: 'Test image 2', width: 1200, height: 800 },
@@ -25,13 +25,17 @@ describe('AppComponent', () => {
   });
 
   beforeEach(async () => {
+    getRandomSpy = jasmine
+      .createSpy<(size: number) => CarouselImage[]>('getRandom')
+      .and.callFake((size: number) => testImages.slice(0, size));
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [
         {
           provide: ImagesService,
           useValue: {
-            images: signal(testImages),
+            getRandom: getRandomSpy,
           },
         },
       ],
@@ -111,7 +115,7 @@ describe('AppComponent', () => {
   });
 
   it('shuffles the image order and clears the current selection', () => {
-    spyOn(Math, 'random').and.returnValues(0, 0);
+    getRandomSpy.and.returnValue([testImages[1], testImages[0]]);
     component.onSelectionChange({ index: 0, image: component.images()[0] } as CarouselSelection);
 
     component.onShuffle();
