@@ -48,7 +48,8 @@ expect(images().map((image) => image.src)).toEqual([
     expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/1/info');
     expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/750/info');
     expect(window.fetch).toHaveBeenCalledWith('https://picsum.photos/id/1500/info');
-    expect(service['images']().map((image) => image.src)).toEqual([
+const images = (service as unknown as { images: () => { src: string }[] }).images;
+expect(images().map((image) => image.src)).toEqual([
       'https://picsum.photos/id/1015/1200/800',
       'https://picsum.photos/id/1025/1200/800',
       'https://picsum.photos/id/1039/1200/800',
