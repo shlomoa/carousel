@@ -1,6 +1,6 @@
 {
   "name": "@shlomoa/mat-image-carousel",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Angular standalone image carousel with Material styling and thumbnail selector.",
   "author": "Shlomo Anglister",
   "license": "MIT",
