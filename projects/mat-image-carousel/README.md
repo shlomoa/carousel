@@ -54,7 +54,7 @@ export class DemoShellComponent {
 - `SelectionDetailsComponent`: accessible announcement panel for the current selection.
 - `CarouselImage`, `CarouselSelection`: shared TypeScript interfaces.
 
-Repository build and release workflows are documented in [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
+Repository build and release workflows are documented in [`CONTRIBUTING.md`](https://github.com/shlomoa/carousel/blob/main/CONTRIBUTING.md).
 
 ## License
 
