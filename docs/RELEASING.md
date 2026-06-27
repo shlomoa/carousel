@@ -102,7 +102,7 @@ The preferred npm publishing path is the manual GitHub Actions workflow at `.git
 
 To publish to npmjs.org:
 
-1. Confirm the repository secret `NPM_TOKEN` is configured with an npm automation/access token that can publish `@shlomoa/mat-image-carousel`.
+1. Check and renew the repository `NPM_TOKEN` secret if needed.
 2. Open the repository on GitHub.
 3. Go to **Actions**.
 4. Select **Node.js Package**.
@@ -110,6 +110,32 @@ To publish to npmjs.org:
 6. Set the `npm-tag` input.
    - Use `latest` for the normal stable release.
    - Use another dist-tag, such as `next` or `beta`, for prerelease validation.
+
+### Check and renew `NPM_TOKEN`
+
+The `Node.js Package` workflow publishes with `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}`. npm access tokens expire 90 days after they are issued, so verify the token before each release.
+
+Token maintenance checklist:
+
+1. Sign in to npmjs.org with an account that can publish `@shlomoa/mat-image-carousel`.
+2. Open the npm access token settings for the account.
+3. Find the token currently used for this repository, if it is identifiable.
+4. Check its expiration date.
+5. If the token is expired or will expire before the release window, create a new npm token with these settings:
+   - **Package:** select `@shlomoa/mat-image-carousel`.
+   - **Organization:** select no organization.
+   - **Two-factor authentication:** check **Bypass two-factor authentication** so GitHub Actions can publish non-interactively.
+   - **Expiration:** choose the maximum available expiration, currently 90 days.
+6. In GitHub, open **Settings → Secrets and variables → Actions** for this repository.
+7. Update or recreate the repository secret named `NPM_TOKEN` with the newly issued npm token value.
+8. Record the new token issue/expiry date in the release checklist or team notes so the next renewal is planned before the 90-day expiry.
+
+Important handling notes:
+
+- npm token values are shown only when created; store/update them immediately.
+- Never commit npm tokens to the repository.
+- Never paste npm tokens into issue comments, pull requests, workflow logs, or chat transcripts.
+- If a token is accidentally exposed, revoke it in npm immediately and replace the GitHub `NPM_TOKEN` secret.
 
 The workflow stages are:
 
@@ -126,6 +152,7 @@ The workflow stages are:
 Requirements:
 
 - The `NPM_TOKEN` GitHub secret must be valid and authorized to publish the package.
+- The npm token backing `NPM_TOKEN` must not be expired; npm tokens expire 90 days after issuing.
 - The `version` in `projects/mat-image-carousel/package.json` must not already exist on npm.
 - The package uses `publishConfig.access: public`, so it publishes as a public scoped package.
 
@@ -178,6 +205,7 @@ npm install @shlomoa/mat-image-carousel
 
 - If the GitHub Release workflow fails before creating a tag, fix the issue and rerun it.
 - If the workflow creates/pushes a tag but fails to create the GitHub Release, create the release manually from that tag or rerun only after confirming the script will not create an unintended extra tag.
+- If the `Node.js Package` workflow fails with an authentication or authorization error, check whether the npm token behind `NPM_TOKEN` has expired, renew it if needed, update the GitHub secret, and rerun the workflow.
 - If the `Node.js Package` workflow fails before publishing, fix the issue and rerun it with the same `npm-tag`.
 - If npm publishing fails after the GitHub Release is created, fix the npm issue and rerun the `Node.js Package` workflow; do not recreate the GitHub tag unless the released source commit changes.
 - If local `npm publish` is used as a fallback, verify that the same package version and dist-tag are published as intended.
