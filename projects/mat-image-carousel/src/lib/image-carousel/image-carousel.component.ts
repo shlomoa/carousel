@@ -13,7 +13,7 @@ import {
 import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CarouselSelectorComponent } from './carousel-selector.component';
+import { CarouselSelectorComponent } from '../carousel-selector/carousel-selector.component';
 import { UplevelComponent } from '../uplevel/uplevel.component';
 import { CarouselImage, CarouselSelection, CarouselSlide } from '../types';
 
