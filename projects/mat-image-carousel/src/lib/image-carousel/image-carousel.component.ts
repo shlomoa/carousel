@@ -14,7 +14,6 @@ import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CarouselSelectorComponent } from '../carousel-selector/carousel-selector.component';
-import { UplevelComponent } from '../uplevel/uplevel.component';
 import { CarouselImage, CarouselSelection, CarouselSlide } from '../types';
 
 @Component({
@@ -24,8 +23,7 @@ import { CarouselImage, CarouselSelection, CarouselSlide } from '../types';
     MatIconModule,
     NgOptimizedImage,
     CarouselSelectorComponent,
-    UplevelComponent
-],
+  ],
   templateUrl: './image-carousel.component.html',
   styleUrls: ['./image-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -52,7 +52,6 @@ export class DemoShellComponent {
 - `ImageCarouselComponent`: the main carousel with swipe gestures and navigation controls.
 - `CarouselSelectorComponent`: thumbnail rail with wrap-around navigation.
 - `SelectionDetailsComponent`: accessible announcement panel for the current selection.
-- `UplevelComponent`: decorative Material button that emits an `activated` event.
 - `CarouselImage`, `CarouselSelection`: shared TypeScript interfaces.
 
 Repository build and release workflows are documented in [`CONTRIBUTING.md`](../../CONTRIBUTING.md).

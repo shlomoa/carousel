@@ -67,10 +67,6 @@ Watch mode is available with `npm test -- --watch=true`.
 - **Metadata panel:** Bind to a selected `CarouselImage` to announce captions, alt text, and resolution where available.
 - **Live announcement card:** Use its `aria-live="polite"` behaviour to provide nonvisual confirmation when selections change.
 
-### `uplevel`
-- **Navigation affordance:** Surface a stylised Material button that emits an `activated` event when clicked—perfect for "back to gallery" or breadcrumb interactions.
-- **Decorative CTA:** Drop into marketing layouts where a compact, on-brand upward arrow control is desired.
-
 For deeper architectural notes—including signal wiring, animation timing, and accessibility considerations—see [`docs/CAROUSEL_SPEC.md`](./docs/CAROUSEL_SPEC.md).
 
 ## Contributing

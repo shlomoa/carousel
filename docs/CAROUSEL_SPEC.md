@@ -14,7 +14,7 @@ This document describes the Angular implementation provided by the `@shlomoa/mat
     - `section.carousel` acts as an interactive region (`tabindex="0"`).
     - `div.viewport` wraps a flex-based `div.track` that holds a rotating list of `article.slide` elements.
     - Prev/next Material icon buttons flank the viewport.
-    - A `div.selector-row` renders `<uplevel>` and `<carousel-selector>` underneath the viewport.
+    - A `div.selector-row` renders `<carousel-selector>` underneath the viewport.
 - **Image rendering:** Uses `NgOptimizedImage` (`[ngSrc]`) with responsive object-fit and optional captions.
 
 ### 1.2 `CarouselSelectorComponent` (`carousel-selector`)
@@ -35,11 +35,7 @@ This document describes the Angular implementation provided by the `@shlomoa/mat
     - `caption`: optional override (currently unused by the shell).
 - **Rendered details:** slide number, caption fallback chain (`caption → image.caption → image.alt → "Photo N"`), alt text, and resolution when available. The container is announced via `aria-live="polite"`.
 
-### 1.4 `UplevelComponent` (`uplevel`)
-- **Purpose:** Displays a decorative "navigate up" control with Material styling.
-- **Output:** `activated` emits on click; the current shell does not handle this event yet, so the control is visually present but functionally inert.
-
-### 1.5 `AppComponent` (`app-root`)
+### 1.4 `AppComponent` (`app-root`)
 - Imports `ImageCarouselComponent` and `SelectionDetailsComponent` directly from the `@shlomoa/mat-image-carousel` package.
 - Holds the image data array and current selection as Angular signals.
 - Passes `images` into `<image-carousel>` and listens for `selectionChange` to update local state.
@@ -105,24 +101,22 @@ The implementation uses an **array rotation** technique to emulate an endless tr
 - The slide list functions as a `role="listbox"` with each slide as `role="option"` and `aria-selected` state.
 - `activeDescendantId` keeps assistive tech informed about the focused slide while the listbox has focus.
 - Buttons include descriptive `aria-label`s, and the selection details panel uses polite live regions to narrate updates.
-- The `uplevel` button contains a visually hidden text label to complement its iconography.
 
 ## 7. Styling and Layout
 
 - Carousel maintains a `16:9` aspect ratio on desktop and `4:3` on narrow viewports (<600 px).
 - Slides fill the viewport, with captions overlaid using a translucent backdrop.
 - Navigation buttons float over the viewport with blurred glass backgrounds and hover/focus states.
-- The selector row centers its content, spacing the uplevel control from the thumbnail list.
+- The selector row centers the thumbnail list underneath the viewport.
 - Selection pulses use keyframed scale and box-shadow transitions for emphasis.
 - In short landscape scenarios (e.g., handsets rotated horizontally) the viewport height is clamped and slide images switch to `object-fit: contain`, keeping the full frame visible without cropping.
-- Thumbnail buttons and the uplevel control scale down at shared breakpoint tiers (600 px, 480 px) so the selector row remains a single aligned line across phones and tablets.
+- Thumbnail buttons scale down at shared breakpoint tiers (600 px, 480 px) so the selector row remains a single aligned line across phones and tablets.
 
 ## 8. Integration Notes
 
 - The demo seeds five sample images from Picsum with captions, alt text, and dimensions.
 - No global state store is required; all component state is local via signals.
-- The `uplevel` component currently emits an `activated` event with no listener—future features may hook into it for navigation.
 - The carousel ships as the `@shlomoa/mat-image-carousel` Angular library and is built with `ng build mat-image-carousel`; `npm run pack:lib` produces a distributable tarball.
-- Unit tests (`npm test`) validate component creation, carousel rendering, and uplevel presence across both the library and demo shell.
+- Unit tests (`npm test`) validate component creation, carousel rendering, selector behaviour, and demo shell integration.
 
-This specification reflects the behaviour of the codebase as of November 2025.
+This specification reflects the behaviour of the codebase as of June 2026.
